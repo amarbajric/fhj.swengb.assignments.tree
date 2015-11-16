@@ -78,7 +78,7 @@ object MathUtil {
     * @return
     */
   def round(value: Double): Double = {
-    ???
+    (math rint value *100) / 100
   }
 
   /**
@@ -88,7 +88,7 @@ object MathUtil {
     * @return
     */
   def toRadiants(angle: AngleInDegrees): AngleInRadiants = {
-   ???
+   math.toRadians(angle)
   }
 }
 
