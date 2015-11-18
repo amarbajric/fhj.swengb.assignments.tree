@@ -78,7 +78,8 @@ object MathUtil {
     * @return
     */
   def round(value: Double): Double = {
-    (math rint value *100) / 100
+    val rounding = BigDecimal(value).setScale(3, BigDecimal.RoundingMode.HALF_UP).toDouble
+    return rounding
   }
 
   /**
