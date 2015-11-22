@@ -115,7 +115,9 @@ object L2D {
     * @return
     */
   def apply(start: Pt2D, angle: AngleInDegrees, length: Double, color: Color): L2D = {
-    ???
+    val calc = (start.ax + round(toRadiants(Math.cos(angle))*length),start.ay + round(toRadiants(Math.sin(angle))* length))
+    val endPoint = Pt2D(calc._1,calc._2)
+    return L2D(start: Pt2D,endPoint,color)
   }
 
 
