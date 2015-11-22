@@ -82,6 +82,7 @@ object MathUtil {
     * @return
     */
   def round(value: Double): Double = {
+    //rounding function retrieved from StackOverflow
     val rounding = BigDecimal(value).setScale(3, BigDecimal.RoundingMode.HALF_UP).toDouble
     return rounding
   }
@@ -93,6 +94,7 @@ object MathUtil {
     * @return
     */
   def toRadiants(angle: AngleInDegrees): AngleInRadiants = {
+    //nice built-in function to get the Radian
    math.toRadians(angle)
   }
 }
