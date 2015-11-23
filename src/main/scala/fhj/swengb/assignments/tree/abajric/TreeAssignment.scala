@@ -42,7 +42,7 @@ object Graph {
   def traverse[A, B](tree: Tree[A])(convert: A => B): Seq[B] = {
     def TreeToLines(newTree: Tree[A],acc: Seq[B])(convert: A => B): Seq[B] = newTree match {
       case Node(a) => convert(a) +: acc
-      case Branch(left, right) => TreeToLines(left,acc)(convert) ++ acc ; TreeToLines(right,acc)(convert) ++ acc
+      case Branch(left, right) => TreeToLines(left,acc)(convert) ++: acc ++: TreeToLines(right,acc)(convert)
     }
     TreeToLines(tree,Nil)(convert)
   }
@@ -68,8 +68,21 @@ object Graph {
               angle: Double = 45.0,
               colorMap: Map[Int, Color] = Graph.colorMap): Tree[L2D] = {
     assert(treeDepth <= colorMap.size, s"Treedepth higher than color mappings - bailing out ...")
-    ???
- }
+
+    def graphBuilder(start:L2D, acc: Int): Tree[L2D] = acc match {
+      case noBranches if treeDepth == 0 => Node(start)
+        //simpleBranch: only a L2D with an simple branch meaning a left and right L2D...
+      case simpleBranch if treeDepth == acc => Branch(Node(start),Branch(Node(start.left(factor,angle,colorMap(acc-1))),Node(start.right(factor,angle,colorMap(acc-1)))))
+        //default: iterating over and over again and building on an existing branch another branch (treeDepth is here growing so to say)
+      case default => Branch(Node(start),Branch(graphBuilder(start.left(factor,angle,colorMap(acc-1)),acc+1),graphBuilder(start.right(factor,angle,colorMap(acc-1)),acc+1)))
+    }
+
+
+
+    graphBuilder(L2D(start,initialAngle,length,colorMap(0)),1)
+  }
+
+
 
 }
 
@@ -82,7 +95,7 @@ object MathUtil {
     * @return
     */
   def round(value: Double): Double = {
-    //rounding function retrieved from StackOverflow
+    //rounding function retrieved from StackOverflow...implemented using the BigDecimal built-in function
     val rounding = BigDecimal(value).setScale(3, BigDecimal.RoundingMode.HALF_UP).toDouble
     return rounding
   }
@@ -115,7 +128,8 @@ object L2D {
     * @return
     */
   def apply(start: Pt2D, angle: AngleInDegrees, length: Double, color: Color): L2D = {
-    val calc = (start.ax + round(toRadiants(Math.cos(angle))*length),start.ay + round(toRadiants(Math.sin(angle))* length))
+    //first calculating the start and endpoint (the modified angle multiplied with the length)
+    val calc = (start.ax + round(Math.cos(toRadiants(angle))*length),start.ay + round(Math.sin(toRadiants(angle))* length))
     val endPoint = Pt2D(calc._1,calc._2)
     return L2D(start: Pt2D,endPoint,color)
   }
