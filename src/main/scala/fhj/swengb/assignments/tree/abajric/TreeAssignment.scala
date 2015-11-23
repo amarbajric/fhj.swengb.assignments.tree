@@ -95,7 +95,7 @@ object MathUtil {
     * @return
     */
   def round(value: Double): Double = {
-    //rounding function retrieved from StackOverflow...implemented using the BigDecimal built-in function
+    //implemented using the BigDecimal built-in function
     val rounding = BigDecimal(value).setScale(3, BigDecimal.RoundingMode.HALF_UP).toDouble
     return rounding
   }
