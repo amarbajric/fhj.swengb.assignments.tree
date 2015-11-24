@@ -69,21 +69,8 @@ object Graph {
               colorMap: Map[Int, Color] = Graph.colorMap): Tree[L2D] = {
     assert(treeDepth <= colorMap.size, s"Treedepth higher than color mappings - bailing out ...")
 
-    def graphBuilder(start:L2D, acc: Int): Tree[L2D] = acc match {
-      case noBranches if treeDepth == 0 => Node(start)
-        //simpleBranch: only a L2D with an simple branch meaning a left and right L2D...
-      case simpleBranch if treeDepth == acc => Branch(Node(start),Branch(Node(start.left(factor,angle,colorMap(acc-1))),Node(start.right(factor,angle,colorMap(acc-1)))))
-        //default: iterating over and over again and building on an existing branch another branch (treeDepth is here growing so to say)
-      case default => Branch(Node(start),Branch(graphBuilder(start.left(factor,angle,colorMap(acc-1)),acc+1),graphBuilder(start.right(factor,angle,colorMap(acc-1)),acc+1)))
-    }
-
-
-
-    graphBuilder(L2D(start,initialAngle,length,colorMap(0)),1)
+    ???
   }
-
-
-
 }
 
 object MathUtil {
@@ -128,9 +115,10 @@ object L2D {
     * @return
     */
   def apply(start: Pt2D, angle: AngleInDegrees, length: Double, color: Color): L2D = {
-    //first calculating the start and endpoint (the modified angle multiplied with the length)
-    val calc = (start.ax + round(Math.cos(toRadiants(angle))*length),start.ay + round(Math.sin(toRadiants(angle))* length))
-    val endPoint = Pt2D(calc._1,calc._2)
+    //given the startpoint and the vector we have to get the endpoint which is an Pt2D with an x and y coordinate...
+    val x = (start.ax + round(Math.cos(toRadiants(angle))*length))
+    val y = (start.ay + round(Math.sin(toRadiants(angle))* length))
+    val endPoint = Pt2D(x,y)
     return L2D(start: Pt2D,endPoint,color)
   }
 
