@@ -39,9 +39,9 @@ object Graph {
     * @param convert a converter function
     * @return
     */
-  def traverse[A, B](tree: Tree[A])(convert: A => B): Seq[B] = tree match{
+  def traverse[A, B](tree: Tree[A])(convert: A => B): Seq[B] = tree match {
     case Node(value) => Seq(convert(value))
-    case Branch(left,right) => traverse(left)(convert) ++ traverse(right)(convert)
+    case Branch(left, right) => traverse(left)(convert) ++ traverse(right)(convert)
 
   }
 
@@ -67,7 +67,12 @@ object Graph {
               colorMap: Map[Int, Color] = Graph.colorMap): Tree[L2D] = {
     assert(treeDepth <= colorMap.size, s"Treedepth higher than color mappings - bailing out ...")
 
-   ???
+    def buildGraph(start: L2D, acc: Int): Tree[L2D] = acc match {
+      case nothing if treeDepth == 0 => Node(start)
+      case lastBranch if acc == treeDepth => Branch(Node(start), Branch(Node(start.left(factor, angle, colorMap(acc - 1))), Node(start.right(factor, angle, colorMap(acc - 1)))))
+      case default => Branch(Node(start), Branch(buildGraph(start.left(factor, angle, colorMap(acc - 1)), acc + 1), buildGraph(start.right(factor, angle, colorMap(acc - 1)), acc + 1)))
+    }
+    buildGraph(L2D(start, initialAngle, length, colorMap(0)), 1)
   }
 }
 
